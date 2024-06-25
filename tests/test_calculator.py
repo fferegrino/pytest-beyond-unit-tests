@@ -1,8 +1,8 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
-from calculator import Calculator
+from calculator import Calculator, TextualCalculator
 
 
 @pytest.fixture
@@ -61,3 +61,22 @@ def test_divide_by_zero(calculator):
     with pytest.raises(ValueError) as ve:
         calculator.divide(6, 0)
     assert str(ve.value) == "Cannot divide by zero"
+
+
+def test_textual_calculator_add():
+    # Arrange
+    calculator = TextualCalculator()
+    mock_calculator = MagicMock()
+
+    with patch("calculator.Calculator", return_value=mock_calculator):
+        # Arrange
+        mock_calculator.add.return_value = 5
+
+        # Act
+        result = calculator.perform_operation("2 + 3")
+
+        # Assert
+        mock_calculator.add.assert_called_once_with(2, 3)
+
+    # Assert
+    assert result == 5

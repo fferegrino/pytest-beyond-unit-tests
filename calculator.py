@@ -20,3 +20,26 @@ class Calculator:
         value = a / b
         print(f"Dividing {a} by {b} equals {value}")
         return value
+
+
+class TextualCalculator:
+
+    def perform_operation(self, operation):
+        try:
+            a, op, b = operation.split()
+
+            calculator = Calculator()
+
+            if op == "+":
+                return calculator.add(int(a), int(b))
+            elif op == "-":
+                return calculator.subtract(int(a), int(b))
+            elif op == "*":
+                return calculator.multiply(int(a), int(b))
+            elif op == "/":
+                return calculator.divide(int(a), int(b))
+            else:
+                return "Invalid operation"
+
+        except ValueError:
+            return "Invalid operation"

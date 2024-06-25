@@ -190,3 +190,55 @@ def test_subtract(calculator, a, b, expected):
         assert calculator.subtract(a, b) == expected
         mock_print.assert_called_once_with(f"Subtracting {b} from {a} equals {expected}")
 ```
+
+## 5. Introducing `MagicMock`
+
+`MagicMock` is a versatile and powerful class in Python’s `unittest.mock` module that is widely used in unit testing to replace parts of your system under test with mock objects. It is particularly useful when you need to simulate and assert interactions with complex objects or when the external systems are not readily available during testing.
+
+To test it, let's include a new class in the `calculator.py` file:
+
+```python
+class TextualCalculator:
+
+    def perform_operation(self, operation):
+        try:
+            a, op, b = operation.split()
+
+            calculator = Calculator()
+
+            if op == "+":
+                return calculator.add(int(a), int(b))
+            elif op == "-":
+                return calculator.subtract(int(a), int(b))
+            elif op == "*":
+                return calculator.multiply(int(a), int(b))
+            elif op == "/":
+                return calculator.divide(int(a), int(b))
+            else:
+                return "Invalid operation"
+            
+        except ValueError:
+            return "Invalid operation"
+```
+
+Now we can patch our calculator class with a `MagicMock`:
+
+```python
+def test_textual_calculator_add():
+    # Arrange
+    calculator = TextualCalculator()
+    mock_calculator = MagicMock()
+
+    with patch("calculator.Calculator", return_value=mock_calculator):
+        # Arrange
+        mock_calculator.add.return_value = 5
+
+        # Act
+        result = calculator.perform_operation("2 + 3")
+
+        # Assert
+        mock_calculator.add.assert_called_once_with(2, 3)
+
+    # Assert
+    assert result == 5
+```
