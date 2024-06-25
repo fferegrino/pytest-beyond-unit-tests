@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from calculator import Calculator
@@ -8,20 +10,24 @@ def calculator():
     return Calculator()
 
 
+@patch("builtins.print")
 @pytest.mark.parametrize(
     ["a", "b", "expected"], [(1, 2, 3), (2, 3, 5), (3, -4, -1)], ids=["1_plus_2", "2_plus_3", "3_plus_minus_4"]
 )
-def test_add(calculator, a, b, expected):
+def test_add(mock_print, calculator, a, b, expected):
     # Act
     result = calculator.add(a, b)
 
     # Assert
+    mock_print.assert_called_once_with(f"Adding {a} and {b} equals {expected}")
     assert result == expected
 
 
 @pytest.mark.parametrize(["a", "b", "expected"], [(1, 2, -1), (2, 3, -1), (3, -4, 7)])
 def test_subtract(calculator, a, b, expected):
-    assert calculator.subtract(a, b) == expected
+    with patch("builtins.print") as mock_print:
+        assert calculator.subtract(a, b) == expected
+        mock_print.assert_called_once_with(f"Subtracting {b} from {a} equals {expected}")
 
 
 @pytest.mark.parametrize(["a", "b", "expected"], [(1, 2, 2), (2, 3, 6), (3, -4, -12)])

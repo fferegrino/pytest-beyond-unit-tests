@@ -158,3 +158,35 @@ As you can see, parametrised values can play along with fixtures.
 def test_operations(calculator, method, a, b, expected):
     assert getattr(calculator, method)(a, b) == expected
 ```
+
+## 4. Introducing `patch`
+
+Patching in software testing is a crucial technique used to control the behavior of external systems and dependencies during testing. It involves temporarily replacing parts of your application with mock objects during the execution of test cases. The primary goal of patching is to isolate the code under test, ensuring that the tests are both deterministic and efficient.
+
+Let's patch the `print` function via a decorator:
+
+```python
+@patch("builtins.print")
+@pytest.mark.parametrize(
+    ["a", "b", "expected"], [(1, 2, 3), (2, 3, 5), (3, -4, -1)], ids=["1_plus_2", "2_plus_3", "3_plus_minus_4"]
+)
+def test_add(mock_print, calculator, a, b, expected):
+    # Act
+    result = calculator.add(a, b)
+
+    # Assert
+    mock_print.assert_called_once_with(f"Adding {a} and {b} equals {expected}")
+    assert result == expected
+```
+
+Make sure the patches are ordered and first in the function definition.
+
+We can also patch things using a context manager:
+
+```python
+@pytest.mark.parametrize(["a", "b", "expected"], [(1, 2, -1), (2, 3, -1), (3, -4, 7)])
+def test_subtract(calculator, a, b, expected):
+    with patch("builtins.print") as mock_print:
+        assert calculator.subtract(a, b) == expected
+        mock_print.assert_called_once_with(f"Subtracting {b} from {a} equals {expected}")
+```
