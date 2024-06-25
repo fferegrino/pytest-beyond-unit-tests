@@ -8,12 +8,10 @@ def calculator():
     return Calculator()
 
 
-def test_add(calculator):
-    # Arrange
-    a = 1
-    b = 2
-    expected = 3
-
+@pytest.mark.parametrize(
+    ["a", "b", "expected"], [(1, 2, 3), (2, 3, 5), (3, -4, -1)], ids=["1_plus_2", "2_plus_3", "3_plus_minus_4"]
+)
+def test_add(calculator, a, b, expected):
     # Act
     result = calculator.add(a, b)
 
@@ -21,20 +19,36 @@ def test_add(calculator):
     assert result == expected
 
 
-def test_subtract(calculator):
-    a = 2
-    b = 1
-    expected = 1
-
+@pytest.mark.parametrize(["a", "b", "expected"], [(1, 2, -1), (2, 3, -1), (3, -4, 7)])
+def test_subtract(calculator, a, b, expected):
     assert calculator.subtract(a, b) == expected
 
 
-def test_multiply(calculator):
-    assert calculator.multiply(2, 3) == 6
+@pytest.mark.parametrize(["a", "b", "expected"], [(1, 2, 2), (2, 3, 6), (3, -4, -12)])
+def test_multiply(calculator, a, b, expected):
+    assert calculator.multiply(a, b) == expected
 
 
-def test_divide(calculator):
-    assert calculator.divide(6, 2) == 3
+@pytest.mark.parametrize(["a", "b", "expected"], [(6, 2, 3), (10, 2, 5), (12, 3, 4)])
+def test_divide(calculator, a, b, expected):
+    assert calculator.divide(a, b) == expected
+
+
+# @pytest.mark.parametrize(
+#     ["method", "a", "b", "expected"],
+#     [
+#         ("add", 2, 3, 5),
+#         ("add", 3, 4, 7),
+#         ("subtract", 10, 2, 8),
+#         ("subtract", 2, 3, -1),
+#         ("multiply", 2, 3, 6),
+#         ("multiply", 3, -4, -12),
+#         ("divide", 10, 2, 5),
+#         ("divide", 12, 3, 4),
+#     ],
+# )
+# def test_operations(calculator, method, a, b, expected):
+#     assert getattr(calculator, method)(a, b) == expected
 
 
 def test_divide_by_zero(calculator):

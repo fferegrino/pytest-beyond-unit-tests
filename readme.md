@@ -118,3 +118,43 @@ def test_divide_by_zero(calculator):
         calculator.divide(6, 0)
     assert str(ve.value) == "Cannot divide by zero"
 ```
+
+## 3. Introduction to parametrise
+
+When we want to test our functions against several test cases
+
+```python
+@pytest.mark.parametrize(
+    ["a", "b", "expected"],
+    [(1, 2, 3), (2, 3, 5), (3, -4, -1)],
+    ids=["1_plus_2", "2_plus_3", "3_plus_minus_4"]
+)
+def test_add(calculator, a, b, expected):
+    # Act
+    result = calculator.add(a, b)
+
+    # Assert
+    assert result == expected
+```
+
+As you can see, parametrised values can play along with fixtures.
+
+### Bonus, can we shrink the tests even further?
+
+```python
+@pytest.mark.parametrize(
+    ["method", "a", "b", "expected"],
+    [
+        ("add", 2, 3, 5),
+        ("add", 3, 4, 7),
+        ("subtract", 10, 2, 8),
+        ("subtract", 2, 3, -1),
+        ("multiply", 2, 3, 6),
+        ("multiply", 3, -4, -12),
+        ("divide", 10, 2, 5),
+        ("divide", 12, 3, 4),
+    ],
+)
+def test_operations(calculator, method, a, b, expected):
+    assert getattr(calculator, method)(a, b) == expected
+```
