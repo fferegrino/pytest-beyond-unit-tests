@@ -1,3 +1,9 @@
+"""
+This module defines the FeatureEnrichmentService class, which enriches incoming Kafka messages with additional restaurant features.
+
+The service listens for messages from a Kafka topic, retrieves corresponding restaurant features based on the restaurant ID present in the message, updates the message with these features, and then publishes the enriched message back to Kafka.
+"""
+
 import json
 
 from feature_enrichment.database import DatabaseService

@@ -1,3 +1,8 @@
+"""
+This module defines the KafkaService class, which provides simplified methods for interacting with Kafka topics. 
+It encapsulates the functionality for consuming messages from an input topic and producing messages to an output topic using the Confluent Kafka Python client.
+"""
+
 import json
 
 from confluent_kafka import Consumer, Producer

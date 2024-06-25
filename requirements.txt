@@ -1,0 +1,9 @@
+confluent-kafka
+sqlalchemy
+psycopg2-binary
+
+pytest
+pytest-docker
+
+black
+isort
